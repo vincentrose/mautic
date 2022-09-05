@@ -12,11 +12,15 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        <h3 class="panel-title"><?php echo $view['translator']->trans('mautic.config.tab.pagetracking'); ?></h3>
+        <h3 class="panel-title">
+            <?php echo $view['translator']->trans('mautic.config.tab.pagetracking'); ?>
+        </h3>
     </div>
     <div class="panel-body">
         <div class="form-group">
-            <p><?php echo $view['translator']->trans('mautic.config.tab.pagetracking.info'); ?></p>
+            <p>
+                <?php echo $view['translator']->trans('mautic.config.tab.pagetracking.info'); ?>
+            </p>
             <pre>&lt;script&gt;
     (function(w,d,t,u,n,a,m){w['MauticTrackingObject']=n;
         w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)},a=d.createElement(t),
@@ -28,43 +32,53 @@
         </div>
         <div class="row">
             <?php foreach ($form->children as $name => $f): ?>
-                <?php if (in_array($name, ['anonymize_ip', 'track_contact_by_ip', 'track_by_tracking_url', 'do_not_track_404_anonymous'])) : ?>
-                        <div class="col-md-6">
-                            <?php echo $view['form']->row($f); ?>
-                        </div>
-                <?php endif; ?>
-            <?php endforeach; ?>
+            <?php if (in_array($name, ['disable_merge_identified_contacts', 'anonymize_ip', 'track_contact_by_ip', 'track_by_tracking_url', 'do_not_track_404_anonymous'])): ?>
+            <div class="col-md-6">
+                <?php echo $view['form']->row($f); ?>
+            </div>
+            <?php
+    endif; ?>
+            <?php
+endforeach; ?>
         </div>
     </div>
     <div class="panel-heading">
-        <h3 class="panel-title"><?php echo $view['translator']->trans('mautic.config.tab.tracking.facebook.pixel'); ?></h3>
+        <h3 class="panel-title">
+            <?php echo $view['translator']->trans('mautic.config.tab.tracking.facebook.pixel'); ?>
+        </h3>
     </div>
     <div class="panel-body">
         <?php echo $view['form']->row($form['facebook_pixel_id']); ?>
         <div class="row">
             <?php foreach ($form->children as $name => $f): ?>
-                <?php if (in_array($name, ['facebook_pixel_trackingpage_enabled', 'facebook_pixel_landingpage_enabled'])) : ?>
-                    <div class="col-md-6">
-                        <?php echo $view['form']->row($f); ?>
-                    </div>
-                <?php endif; ?>
-            <?php endforeach; ?>
+            <?php if (in_array($name, ['facebook_pixel_trackingpage_enabled', 'facebook_pixel_landingpage_enabled'])): ?>
+            <div class="col-md-6">
+                <?php echo $view['form']->row($f); ?>
+            </div>
+            <?php
+    endif; ?>
+            <?php
+endforeach; ?>
         </div>
     </div>
 
     <div class="panel-heading">
-        <h3 class="panel-title"><?php echo $view['translator']->trans('mautic.config.tab.tracking.google.analytics'); ?></h3>
+        <h3 class="panel-title">
+            <?php echo $view['translator']->trans('mautic.config.tab.tracking.google.analytics'); ?>
+        </h3>
     </div>
     <div class="panel-body">
         <?php echo $view['form']->row($form['google_analytics_id']); ?>
         <div class="row">
             <?php foreach ($form->children as $name => $f): ?>
-                <?php if (in_array($name, ['google_analytics_trackingpage_enabled', 'google_analytics_landingpage_enabled', 'google_analytics_anonymize_ip'])) : ?>
-                    <div class="col-md-6">
-                        <?php echo $view['form']->row($f); ?>
-                    </div>
-                <?php endif; ?>
-            <?php endforeach; ?>
+            <?php if (in_array($name, ['google_analytics_trackingpage_enabled', 'google_analytics_landingpage_enabled', 'google_analytics_anonymize_ip'])): ?>
+            <div class="col-md-6">
+                <?php echo $view['form']->row($f); ?>
+            </div>
+            <?php
+    endif; ?>
+            <?php
+endforeach; ?>
         </div>
     </div>
 </div>

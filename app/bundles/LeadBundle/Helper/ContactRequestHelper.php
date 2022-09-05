@@ -76,14 +76,15 @@ class ContactRequestHelper
         RequestStack $requestStack,
         Logger $logger,
         EventDispatcherInterface $eventDispatcher
-    ) {
-        $this->leadModel            = $leadModel;
-        $this->contactTracker       = $contactTracker;
+        )
+    {
+        $this->leadModel = $leadModel;
+        $this->contactTracker = $contactTracker;
         $this->coreParametersHelper = $coreParametersHelper;
-        $this->ipLookupHelper       = $ipLookupHelper;
-        $this->requestStack         = $requestStack;
-        $this->logger               = $logger;
-        $this->eventDispatcher      = $eventDispatcher;
+        $this->ipLookupHelper = $ipLookupHelper;
+        $this->requestStack = $requestStack;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -92,13 +93,14 @@ class ContactRequestHelper
     public function getContactFromQuery(array $queryFields = [])
     {
         unset($queryFields['page_url']); // This is set now automatically by PageModel
-        $this->queryFields    = $queryFields;
+        $this->queryFields = $queryFields;
 
         try {
-            $foundContact         = $this->getContactFromUrl();
+            $foundContact = $this->getContactFromUrl();
             $this->trackedContact = $foundContact;
             $this->contactTracker->setTrackedContact($this->trackedContact);
-        } catch (ContactNotFoundException $exception) {
+        }
+        catch (ContactNotFoundException $exception) {
         }
 
         if (!$this->trackedContact) {
@@ -124,7 +126,8 @@ class ContactRequestHelper
         // Check for a lead requested through clickthrough query parameter
         if (isset($this->queryFields['ct'])) {
             $clickthrough = (is_array($this->queryFields['ct'])) ? $this->queryFields['ct'] : ClickthroughHelper::decodeArrayFromUrl($this->queryFields['ct']);
-        } elseif ($clickthrough = $this->requestStack->getCurrentRequest()->get('ct', [])) {
+        }
+        elseif ($clickthrough = $this->requestStack->getCurrentRequest()->get('ct', [])) {
             $clickthrough = ClickthroughHelper::decodeArrayFromUrl($clickthrough);
         }
 
@@ -134,7 +137,8 @@ class ContactRequestHelper
 
         try {
             return $this->getContactFromClickthrough($clickthrough);
-        } catch (ContactNotFoundException $exception) {
+        }
+        catch (ContactNotFoundException $exception) {
         }
 
         $this->setEmailFromClickthroughIdentification($clickthrough);
@@ -147,6 +151,15 @@ class ContactRequestHelper
                 true,
                 true
             );
+            // TODO: If they email exists then update the record
+
+            // If the email doesn’t exists then create a record with a new id
+
+            // If the email does exist and the record doesn’t match the ID then create a new record.
+
+            if ($foundContact && !$foundContact->getId()) {
+                $this->leadModel->saveEntity($foundContact);
+            }
             if (is_null($this->trackedContact) or $foundContact->getId() !== $this->trackedContact->getId()) {
                 // A contact was found by a publicly updatable field
                 if (!$foundContact->isNew()) {
@@ -171,7 +184,7 @@ class ContactRequestHelper
         $this->eventDispatcher->dispatch(LeadEvents::ON_CLICKTHROUGH_IDENTIFICATION, $event);
 
         if ($contact = $event->getIdentifiedContact()) {
-            $this->logger->addDebug("LEAD: Contact ID# {$contact->getId()} tracked through clickthrough query by the ".$event->getIdentifier().' channel');
+            $this->logger->addDebug("LEAD: Contact ID# {$contact->getId()} tracked through clickthrough query by the " . $event->getIdentifier() . ' channel');
 
             // Merge tracked visitor into the clickthrough contact
             return $this->mergeWithTrackedContact($contact);
@@ -202,7 +215,7 @@ class ContactRequestHelper
 
     private function prepareContactFromRequest()
     {
-        $ipAddress          = $this->ipLookupHelper->getIpAddress();
+        $ipAddress = $this->ipLookupHelper->getIpAddress();
         $contactIpAddresses = $this->trackedContact->getIpAddresses();
         if (!$contactIpAddresses->contains($ipAddress)) {
             $this->trackedContact->addIpAddress($ipAddress);
@@ -221,10 +234,10 @@ class ContactRequestHelper
         // Assume a web request as this is likely a tracking request from DWC or tracking code
         $this->trackedContact->setManipulator(
             new LeadManipulator(
-                'page',
-                'hit',
-                null,
-                (isset($this->queryFields['page_url'])) ? $this->queryFields['page_url'] : ''
+            'page',
+            'hit',
+            null,
+            (isset($this->queryFields['page_url'])) ? $this->queryFields['page_url'] : ''
             )
         );
 
