@@ -46,10 +46,9 @@ class ConfigTrackingPageType extends AbstractType
             ],
         ]
         );
-
         $builder->add(
             'disable_merge_identified_contacts',
-            'yesno_button_group',
+            YesNoButtonGroupType::class ,
         [
             'label' => 'mautic.page.config.form.disable_merge_identified_contacts',
             'data' => isset($options['data']['disable_merge_identified_contacts']) ? (bool)$options['data']['disable_merge_identified_contacts'] : false,
